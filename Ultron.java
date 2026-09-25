@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-
 package Ultron;
 import robocode.*;
 //import java.awt.Color;
@@ -56,4 +54,3 @@ public class Ultron extends Robot
 		back(20);
 	}	
 }
->>>>>>> 2e5b3b9ec4b8524fb4f476df51bef741ad32b113
