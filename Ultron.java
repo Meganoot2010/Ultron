@@ -9,9 +9,6 @@ import robocode.*;
  */
 public class Ultron extends Robot
 {
-	/**
-	 * run: Ultron's default behavior
-	 */
 	public void run() {
 		// Initialization of the robot should be put here
 
@@ -21,12 +18,21 @@ public class Ultron extends Robot
 		// setColors(Color.red,Color.blue,Color.green); // body,gun,radar
 
 		// Robot main loop
-		while(true) {
-			// Replace the next 4 lines with any behavior you would like
+		Boolean mov = true;
+		while(mov = true) {
 			ahead(100);
-			turnGunRight(360);
-			back(100);
-			turnGunRight(360);
+			turnRight(50);
+			ahead(75);
+			turnLeft(25);
+			mov = false;
+		}
+		while(mov = false) {
+			back(75);
+			turnRight(25);
+			ahead(25);
+			turnLeft(75);
+			back(25);
+			mov = true;
 		}
 	}
 
@@ -35,7 +41,7 @@ public class Ultron extends Robot
 	 */
 	public void onScannedRobot(ScannedRobotEvent e) {
 		// Replace the next line with any behavior you would like
-		fire(1);
+		fire(5);
 	}
 
 	/**
@@ -51,6 +57,8 @@ public class Ultron extends Robot
 	 */
 	public void onHitWall(HitWallEvent e) {
 		// Replace the next line with any behavior you would like
-		back(20);
+		back(150);
+		turnRight(90);
+		ahead(100);
 	}	
 }
