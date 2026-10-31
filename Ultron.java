@@ -11,7 +11,7 @@ public class Ultron extends AdvancedRobot
 
 
 	public void run() {
-		setColors(Color.gray,Color.orange,Color.red);  
+		setColors(Color.gray,Color.red,Color.red);  
 
 	//Serve para "deslinkar" o radar do resto do tanque
 	setAdjustRadarForRobotTurn(true);
@@ -21,23 +21,41 @@ public class Ultron extends AdvancedRobot
                 	setTurnRadarRightRadians(Double.POSITIVE_INFINITY);
             	}
 			turnos_depois_visao++;
-
 			execute();
+		}
 	}
 
 
 	public void onScannedRobot(ScannedRobotEvent e) {
 
+	double Distancia = e.getDistance();
 	//Calcula a posição atual do inimigo
     double anguloabsoluto= getHeadingRadians() + e.getBearingRadians();
-    double XInimigo = getX() + Math.sin(anguloabsoluto) * e.getDistance();
-    double YInimigo = getY() + Math.cos(anguloabsoluto) * e.getDistance();
+    double XInimigo = getX() + Math.sin(anguloabsoluto) * Distancia;
+    double YInimigo = getY() + Math.cos(anguloabsoluto) * Distancia;
 
-	//Tenta Perseguir o alvo
+	//Garante que a potência não seja menor que 0.1 nem maior que 3
+	double ForcaTiro = Math.min(3.0, Math.max(0.1, 300 / e.getDistance()));
+
+	//Tenta Perseguir o alvo com o scan
 	turnos_depois_visao = 0;
         double virarScan = Utils.normalRelativeAngle(anguloabsoluto - getRadarHeadingRadians());
         double afrente = Math.copySign(AFRENTE, virarScan);
         setTurnRadarRightRadians(virarScan + afrente);
+
+	//Calcula a posição linear futura e atira nela
+	double dx = XInimigo - getX();
+	double dy = YInimigo - getY();
+	double VelX = e.getVelocity() * Math.sin(e.getHeadingRadians()); 
+	double VelY = e.getVelocity() * Math.cos(e.getHeadingRadians());
+	double VBala = 20 - (3 * ForcaTiro);
+	double tempo = Distancia / VBala;
+	double prevX = XInimigo + VelX * tempo;
+	double prevY = YInimigo + VelY * tempo;
+	double anguloTiro = Math.atan2(prevX - getX(),prevY - getY());
+	double virarCanhao = Utils.normalRelativeAngle(anguloTiro - getGunHeadingRadians());
+	setTurnGunRightRadians(virarCanhao);
+	setFire(ForcaTiro);
 	}
 
 	
