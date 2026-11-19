@@ -5,11 +5,8 @@ import java.awt.Color;
 
 public class Ultron extends AdvancedRobot
 {
-	private static final int TURNOS_SEM_VISAO = 3;
-    private static final double AFRENTE = Math.toRadians(5);
-    private int turnos_depois_visao = TURNOS_SEM_VISAO + 1;
-
-
+    private int turnos_depois_visao = 2;
+	
 	public void run() {
 		setColors(Color.gray,Color.red,Color.red);  
 
@@ -17,14 +14,13 @@ public class Ultron extends AdvancedRobot
 	setAdjustRadarForRobotTurn(true);
 	while(true){
 		//Ativa a busca por alvos se não encontrar um alvo por muito tempo
-	 	if (turnos_depois_visao > TURNOS_SEM_VISAO) {
+	 	if (turnos_depois_visao > 1) {
                 	setTurnRadarRightRadians(Double.POSITIVE_INFINITY);
             	}
 			turnos_depois_visao++;
 			execute();
 		}
 	}
-
 
 	public void onScannedRobot(ScannedRobotEvent e) {
 
@@ -40,12 +36,13 @@ public class Ultron extends AdvancedRobot
 	//Tenta Perseguir o alvo com o scan
 	turnos_depois_visao = 0;
         double virarScan = Utils.normalRelativeAngle(anguloabsoluto - getRadarHeadingRadians());
-        double afrente = Math.copySign(AFRENTE, virarScan);
+        double afrente = Math.copySign(Math.toRadians(5), virarScan);
         setTurnRadarRightRadians(virarScan + afrente);
 
 	//Calcula a posição linear futura e atira nela
 	double dx = XInimigo - getX();
 	double dy = YInimigo - getY();
+	
 	double VelX = e.getVelocity() * Math.sin(e.getHeadingRadians()); 
 	double VelY = e.getVelocity() * Math.cos(e.getHeadingRadians());
 	double VBala = 20 - (3 * ForcaTiro);
